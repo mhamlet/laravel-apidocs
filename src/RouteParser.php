@@ -74,6 +74,8 @@ class RouteParser {
 
     /**
      * @param RouteCollection $routeCollection
+     *
+     * @return array
      */
     public static function describeRoutes(RouteCollection $routeCollection) {
 
@@ -86,9 +88,16 @@ class RouteParser {
 
             // Method and controller
             $action = $route->getAction();
-            $controller = explode('@', $action['controller']);
-            $method = $controller[1];
-            $controller = $controller[0];
+
+            if ($action['uses'] instanceof \Closure) {
+                $method = null;
+                $controller = null;
+            }
+            else {
+                $controller = explode('@', $action['controller']);
+                $method = $controller[1];
+                $controller = $controller[0];
+            }
 
             // Verbs
             $verbs = $route->getMethods();

@@ -2,34 +2,84 @@
 
 namespace MHamlet\Apidocs;
 
-use Illuminate\Routing\Controller;
-
 class Generator {
 
-    private $controllers = [];
+    /**
+     * @var array
+     */
+    private $routes;
 
     /**
-     * Create a new Skeleton Instance
+     * @var self[]
      */
-    public function __construct() {
+    private static $generatorInstances = [];
 
+    /**
+     * Create a new Generator Instance
+     *
+     * @param array $routes
+     */
+    private function __construct(array $routes) {
+
+        $this->routes = $routes;
     }
 
     /**
-     * @param Controller $controller
+     * @param string $prefix
+     * @param array  $routes
+     *
+     * @return Generator
      */
-    public function addController($controller) {
+    private static function getInstance($prefix, array $routes) {
 
-        if (!array_search($controller, $this->controllers)) {
-            $this->controllers[] = $controller;
+        $prefix = ltrim(trim($prefix), '/');
+
+        if (!array_key_exists($prefix, self::$generatorInstances)) {
+            self::$generatorInstances[$prefix] = new self($routes);
         }
+
+        return self::$generatorInstances[$prefix];
+    }
+
+    /**
+     * @return Generator
+     */
+    public static function forAllRoutes() {
+
+        $key = "__APIDOCS_ALL";
+        $routes = RouteParser::describeRoutes(RouteParser::getRoutes());
+
+        return self::getInstance($key, $routes);
+    }
+
+    /**
+     * @param string $prefix
+     *
+     * @return Generator
+     */
+    public static function forRoutesWithPrefix($prefix) {
+
+        $routes = RouteParser::describeRoutes(RouteParser::getRoutesByPrefix($prefix));
+
+        return self::getInstance($prefix, $routes);
+    }
+
+    /**
+     * @return array
+     */
+    public function describeRoutes() {
+
+        return $this->routes;
     }
 
     public function generate() {
 
-        foreach ($this->controllers as $controller) {
+        // Getting routes
+        $routes = $this->describeRoutes();
 
-            $parser = new Parser($controller);
+        foreach ($routes as $route) {
+
+            $parser = new Parser($route['controller']);
             dd($parser->parseMethod('index'));
         }
     }
