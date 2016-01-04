@@ -4,6 +4,11 @@ namespace MHamlet\Apidocs\Generators;
 
 use MHamlet\Apidocs\Parsers\ControllerParser;
 
+/**
+ * Class RouteDocsGenerator
+ *
+ * @package MHamlet\Apidocs\Generators
+ */
 class RouteDocsGenerator {
 
     /**

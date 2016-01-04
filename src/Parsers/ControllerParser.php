@@ -13,9 +13,9 @@ use PhpParser\ParserFactory;
 use ReflectionClass;
 
 /**
- * Class Parser
+ * Class ControllerParser
  *
- * @package MHamlet\Apidocs
+ * @package MHamlet\Apidocs\Parsers
  */
 class ControllerParser {
 
@@ -23,16 +23,6 @@ class ControllerParser {
      * @var Controller
      */
     private $controller;
-
-    /**
-     * @var ReflectionClass
-     */
-    private $reflector;
-
-    /**
-     * @var \PhpParser\Parser
-     */
-    private $parser;
 
     /**
      * @var null|\PhpParser\Node[]
@@ -49,21 +39,16 @@ class ControllerParser {
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP5);
 
         try {
-            $this->statements = $this->parser->parse(file_get_contents($this->reflector->getFileName()));
-            $this->parseClassStatements();
+            $this->parseClassStatements($this->parser->parse(file_get_contents($this->reflector->getFileName())));
         }
         catch (\Exception $e) {
         }
     }
 
     /**
-     * @param Node $statements
+     * @param Node[] $statements
      */
-    private function parseClassStatements($statements = false) {
-
-        if ($statements === FALSE) {
-            $statements = $this->statements;
-        }
+    private function parseClassStatements($statements) {
 
         foreach ($statements as $statement) {
 
@@ -80,11 +65,11 @@ class ControllerParser {
     }
 
     /**
-     * @param Node $statement
+     * @param Node[] $statement
      */
     private function parseMethodStatement($statement) {
 
-        // Parsing methods
+        // Skip magic methods
         if (substr($statement->name, 0, 2) == '__') {
             return;
         }
@@ -99,7 +84,7 @@ class ControllerParser {
 
     /**
      * @param string $method
-     * @param Node   $statement
+     * @param Node[]   $statement
      */
     private function parseReturnStatement($method, $statement) {
 
@@ -121,6 +106,11 @@ class ControllerParser {
         }
     }
 
+    /**
+     * @param string $method
+     *
+     * @return array
+     */
     public function parseMethod($method) {
 
         $methodReflector = $this->reflector->getMethod($method);
