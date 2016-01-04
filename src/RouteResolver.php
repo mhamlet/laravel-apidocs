@@ -5,7 +5,7 @@ namespace MHamlet\Apidocs;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router;
 
-class RouteParser {
+class RouteResolver {
 
     /**
      * @var Router

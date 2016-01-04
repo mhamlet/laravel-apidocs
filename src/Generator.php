@@ -12,7 +12,7 @@ class Generator {
     public static function forAllRoutes() {
 
         $key = "__APIDOCS_ALL";
-        $routes = RouteParser::describeRoutes(RouteParser::getRoutes());
+        $routes = RouteResolver::describeRoutes(RouteResolver::getRoutes());
 
         return RouteDocsGenerator::getInstance($key, $routes);
     }
@@ -24,7 +24,7 @@ class Generator {
      */
     public static function forRoutesWithPrefix($prefix) {
 
-        $routes = RouteParser::describeRoutes(RouteParser::getRoutesByPrefix($prefix));
+        $routes = RouteResolver::describeRoutes(RouteResolver::getRoutesByPrefix($prefix));
 
         return RouteDocsGenerator::getInstance($prefix, $routes);
     }
