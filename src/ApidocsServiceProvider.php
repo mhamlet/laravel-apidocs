@@ -24,6 +24,9 @@ class ApidocsServiceProvider extends ServiceProvider {
         // Registering custom tags
         Tag::registerTagHandler('apiParam', '\phpDocumentor\Reflection\DocBlock\Tag\ParamTag');
 
+        // Set router
+        RouteParser::setRouter(app()->make('router'));
+
         // use this if your package needs a config file
         // $this->publishes([
         //         __DIR__.'/config/config.php' => config_path('skeleton.php'),
