@@ -2,6 +2,8 @@
 
 namespace MHamlet\Apidocs\Generators;
 
+use MHamlet\Apidocs\Parsers\ControllerParser;
+
 class RouteDocsGenerator {
 
     /**
@@ -28,7 +30,7 @@ class RouteDocsGenerator {
      * @param string $prefix
      * @param array  $routes
      *
-     * @return Generator
+     * @return self
      */
     public static function getInstance($prefix, array $routes) {
 
@@ -42,6 +44,8 @@ class RouteDocsGenerator {
     }
 
     /**
+     * Return route describers - path, verbs, controller and method
+     *
      * @return array
      */
     public function describeRoutes() {
@@ -49,15 +53,33 @@ class RouteDocsGenerator {
         return $this->routes;
     }
 
+    /**
+     * Returns same data, as "describeRoutes" method, with additional data
+     *
+     * @return array
+     */
     public function generate() {
 
         // Getting routes
         $routes = $this->describeRoutes();
 
-        foreach ($routes as $route) {
+        foreach ($routes as &$route) {
 
-            $parser = new Parser($route['controller']);
-            dd($parser->parseMethod('index'));
+            if (is_null($route['controller']) || is_null($route['method'])) {
+                continue;
+            }
+
+            $parser = new ControllerParser($route['controller']);
+            $parsedMethod = $parser->parseMethod($route['method']);
+
+            unset($route['controller']);
+            unset($route['method']);
+
+            $route['params'] = $parsedMethod['params'];
+            $route['description'] = $parsedMethod['description'];
+            $route['responses'] = $parsedMethod['return'];
         }
+
+        return $routes;
     }
 }

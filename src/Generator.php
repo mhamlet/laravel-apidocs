@@ -7,7 +7,7 @@ use MHamlet\Apidocs\Generators\RouteDocsGenerator;
 class Generator {
 
     /**
-     * @return Generator
+     * @return RouteDocsGenerator
      */
     public static function forAllRoutes() {
 
@@ -20,7 +20,7 @@ class Generator {
     /**
      * @param string $prefix
      *
-     * @return Generator
+     * @return RouteDocsGenerator
      */
     public static function forRoutesWithPrefix($prefix) {
 
@@ -28,5 +28,4 @@ class Generator {
 
         return RouteDocsGenerator::getInstance($prefix, $routes);
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace MHamlet\Apidocs;
+namespace MHamlet\Apidocs\Parsers;
 
 use Illuminate\Routing\Controller;
 use phpDocumentor\Reflection\DocBlock;
@@ -17,7 +17,7 @@ use ReflectionClass;
  *
  * @package MHamlet\Apidocs
  */
-class Parser {
+class ControllerParser {
 
     /**
      * @var Controller
