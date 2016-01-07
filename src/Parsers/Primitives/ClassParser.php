@@ -46,6 +46,11 @@ class ClassParser {
     private $parser;
 
     /**
+     * @var MethodParser[]
+     */
+    private $method_parsers = [];
+
+    /**
      * @param string $class Class name with namespace to parse
      */
     public function __construct($class) {
@@ -113,7 +118,7 @@ class ClassParser {
                 continue;
             }
 
-            $methods->push((new MethodParser($method))->getParsedMethod());
+            $methods->push($this->getMethodParser($method)->getParsedMethod());
         }
 
         return $methods;
@@ -174,6 +179,20 @@ class ClassParser {
      */
     public function getMethod($method) {
 
-        return (new MethodParser($this->reflector->getMethod($method)))->getParsedMethod();
+        return $this->getMethodParser($method)->getParsedMethod();
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return MethodParser
+     */
+    public function getMethodParser($method) {
+
+        if (!array_key_exists($method, $this->method_parsers)) {
+            $this->method_parsers[$method] = new MethodParser($this->reflector->getMethod($method));
+        }
+
+        return $this->method_parsers[$method];
     }
 }
