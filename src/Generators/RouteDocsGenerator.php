@@ -80,9 +80,9 @@ class RouteDocsGenerator {
             unset($route['controller']);
             unset($route['method']);
 
-            $route['params'] = $parsedMethod['params'];
-            $route['description'] = $parsedMethod['description'];
-            $route['responses'] = $parsedMethod['return'];
+            $route['params'] = $parsedMethod->params;
+            $route['description'] = $parsedMethod->description;
+            $route['responses'] = $parsedMethod->returns;
         }
 
         return $routes;

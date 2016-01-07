@@ -79,6 +79,8 @@ class MethodParser {
         $method = new \stdClass();
         $method->name = $this->method->name;
         $method->params = $this->getTags('apiParam', true, true, true);
+        $method->description = $this->getDocblock()->getShortDescription();
+        $method->returns = [];
 
         return $method;
     }

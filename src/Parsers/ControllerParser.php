@@ -3,6 +3,7 @@
 namespace MHamlet\Apidocs\Parsers;
 
 use Illuminate\Routing\Controller;
+use MHamlet\Apidocs\Parsers\Primitives\ClassParser;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use PhpParser\Node;
@@ -25,6 +26,11 @@ class ControllerParser {
     private $controller;
 
     /**
+     * @var ClassParser
+     */
+    private $class_parser;
+
+    /**
      * @var null|\PhpParser\Node[]
      */
     private $statements;
@@ -35,14 +41,16 @@ class ControllerParser {
 
         $this->controller = $controller;
 
-        $this->reflector = new ReflectionClass($this->controller);
-        $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP5);
+        // Creating class parser for controller
+        $this->class_parser = new ClassParser($this->controller);
 
-        try {
-            $this->parseClassStatements($this->parser->parse(file_get_contents($this->reflector->getFileName())));
-        }
-        catch (\Exception $e) {
-        }
+//        $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP5);
+//
+//        try {
+//            $this->parseClassStatements($this->parser->parse(file_get_contents($this->reflector->getFileName())));
+//        }
+//        catch (\Exception $e) {
+//        }
     }
 
     /**
@@ -84,7 +92,7 @@ class ControllerParser {
 
     /**
      * @param string $method
-     * @param Node[]   $statement
+     * @param Node[] $statement
      */
     private function parseReturnStatement($method, $statement) {
 
@@ -109,45 +117,15 @@ class ControllerParser {
     /**
      * @param string $method
      *
-     * @return array
+     * @return \stdClass
      */
     public function parseMethod($method) {
 
-        $methodReflector = $this->reflector->getMethod($method);
+        return $this->class_parser->getMethod($method);
 
-        // Creating docblock for parsing the docs
-        $docblock = new DocBlock($methodReflector);
-
-        // Parsing params
-        $params = [];
-
-        foreach ($docblock->getTagsByName('apiParam') as $param) {
-
-            // Removing $ sign from name
-            $name = $param->getVariableName();
-
-            if (substr($name, 0, 1) == '$') {
-                $name = substr($name, 1);
-            }
-
-            $params[] = [
-                'type' => $param->getType(),
-                'name' => $name,
-            ];
-        }
-
-        // Parse for return value
-        $return = [];
-
-        if (!is_null($this->statements)) {
-
-            $return = @$this->methodStatementsReturns[$method] ?: [];
-        }
-
-        return [
-            'description' => $docblock->getText(),
-            'params' => $params,
-            'return' => $return,
-        ];
+//        if (!is_null($this->statements)) {
+//
+//            $return = @$this->methodStatementsReturns[$method] ?: [];
+//        }
     }
 }
