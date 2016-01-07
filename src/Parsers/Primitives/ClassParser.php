@@ -166,4 +166,14 @@ class ClassParser {
 
         return $this->getMethods(self::CLASS_METHOD_FINAL);
     }
+
+    /**
+     * @param string $method
+     *
+     * @return \stdClass
+     */
+    public function getMethod($method) {
+
+        return (new MethodParser($this->reflector->getMethod($method)))->getParsedMethod();
+    }
 }
