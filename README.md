@@ -12,7 +12,7 @@ Add the package in your composer.json by executing the command.
 composer require mhamlet/laravel-apidocs
 ```
 
-Next, add the service provider to `app/config/app.php`
+Next, add the service provider to `config/app.php`
 
 ```php
 MHamlet\Apidocs\ApidocsServiceProvider::class,
