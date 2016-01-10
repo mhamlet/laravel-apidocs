@@ -69,6 +69,30 @@ class ClassParser {
     }
 
     /**
+     * @return ReflectionClass
+     */
+    public function getReflector() {
+
+        return $this->reflector;
+    }
+
+    /**
+     * @return Parser
+     */
+    public function getParser() {
+
+        return $this->parser;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode() {
+
+        return $this->class_file_contents;
+    }
+
+    /**
      * Get all methods of class
      *
      * @param int $filter Filter bitmask
@@ -190,7 +214,7 @@ class ClassParser {
     public function getMethodParser($method) {
 
         if (!array_key_exists($method, $this->method_parsers)) {
-            $this->method_parsers[$method] = new MethodParser($this->reflector->getMethod($method));
+            $this->method_parsers[$method] = new MethodParser($this, $method);
         }
 
         return $this->method_parsers[$method];

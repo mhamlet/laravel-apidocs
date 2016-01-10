@@ -7,18 +7,52 @@ use phpDocumentor\Reflection\DocBlock;
 class MethodParser {
 
     /**
-     * @var \ReflectionMethod
+     * @var ClassParser
+     */
+    private $class;
+
+    /**
+     * @var ClassParser
+     */
+    private $originalClass;
+
+    /**
+     * @var string
      */
     private $method;
+
+    /**
+     * @var \ReflectionMethod
+     */
+    private $reflector;
 
     /**
      * @var DocBlock
      */
     private $docBlock;
 
-    public function __construct(\ReflectionMethod $method) {
+    /**
+     * @param ClassParser $class
+     * @param string      $method
+     */
+    public function __construct($class, $method) {
 
+        $this->class = $class;
         $this->method = $method;
+
+        $this->reflector = $this->class->getReflector()->getMethod($this->method);
+    }
+
+    /**
+     * @return ClassParser
+     */
+    private function getOriginalClass() {
+
+        if (is_null($this->originalClass)) {
+            $this->originalClass = new ClassParser($this->reflector->getDeclaringClass()->name);
+        }
+
+        return $this->originalClass;
     }
 
     /**
@@ -29,7 +63,7 @@ class MethodParser {
         if (is_null($this->docBlock)) {
 
             // Creating docblock for parsing the docs
-            $this->docBlock = new DocBlock($this->method);
+            $this->docBlock = new DocBlock($this->reflector);
         }
 
         return $this->docBlock;
@@ -72,12 +106,36 @@ class MethodParser {
     }
 
     /**
+     * @return string
+     */
+    public function getCode() {
+
+        // Getting class code
+        $class_code = explode(PHP_EOL, $this->getOriginalClass()->getCode());
+
+        // Getting start and end lines
+        $start_line = $this->reflector->getStartLine();
+        $end_line = $this->reflector->getEndLine();
+
+        $method_code = "";
+
+        for ($line = $start_line; $line <= $end_line; $line++) {
+
+            if (trim($class_code[$line - 1]) === "") continue;
+
+            $method_code .= $class_code[$line - 1] . PHP_EOL;
+        }
+
+        return rtrim($method_code);
+    }
+
+    /**
      * @return \stdClass
      */
     public function getParsedMethod() {
 
         $method = new \stdClass();
-        $method->name = $this->method->name;
+        $method->name = $this->reflector;
         $method->params = $this->getTags('apiParam', true, true, true);
         $method->description = $this->getDocblock()->getShortDescription();
         $method->returns = [];
