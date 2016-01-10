@@ -32,6 +32,8 @@ class RouteDocsGenerator {
     }
 
     /**
+     * Returns the instance of docs generator for the given routes
+     *
      * @param string $prefix
      * @param array  $routes
      *

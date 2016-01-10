@@ -7,6 +7,8 @@ use MHamlet\Apidocs\Generators\RouteDocsGenerator;
 class Generator {
 
     /**
+     * Returns docs generator for all routes
+     *
      * @return RouteDocsGenerator
      */
     public static function forAllRoutes() {
@@ -18,6 +20,8 @@ class Generator {
     }
 
     /**
+     * Returns docs generator for routes that starts with given prefix
+     *
      * @param string $prefix
      *
      * @return RouteDocsGenerator
