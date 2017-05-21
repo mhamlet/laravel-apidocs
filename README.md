@@ -1,5 +1,10 @@
 ## Laravel API Documentation generator
 
+[![Latest Version](https://img.shields.io/github/release/mhamlet/laravel-apidocs.svg?style=flat-square)](https://github.com/mhamlet/laravel-apidocs/releases)
+[![Build Status](https://img.shields.io/travis/mhamlet/laravel-apidocs/master.svg?style=flat-square)](https://travis-ci.org/mhamlet/laravel-apidocs)
+[![Quality Score](https://img.shields.io/scrutinizer/g/mhamlet/laravel-apidocs.svg?style=flat-square)](https://scrutinizer-ci.com/g/mhamlet/laravel-apidocs)
+[![Total Downloads](https://img.shields.io/packagist/dt/mhamlet/laravel-apidocs.svg?style=flat-square)](https://packagist.org/packages/mhamlet/laravel-apidocs)
+
 This Laravel package provides an API Documentation generator. It's based on your Routes and Controller Method DocBlock comments.
 
 The package requires Laravel 5.2.
