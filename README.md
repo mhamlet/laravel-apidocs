@@ -7,7 +7,7 @@
 
 This Laravel package provides an API Documentation generator. It's based on your Routes and Controller Method DocBlock comments.
 
-The package requires Laravel 5.2.
+The package requires PHP >= 7.0 and Laravel 5.4.
 
 ## Installation
 
